@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux"; // Assuming you use Redux for state management
+import { useSelector } from "react-redux";
 import Notification from "@/components/widgets/Notification";
 
 export default function CreateReview() {
@@ -9,7 +9,7 @@ export default function CreateReview() {
   const [isNotificationOn, setIsNotificationOn] = useState(false);
   const [messages, setMessages] = useState({ message: "", error: "" });
 
-  const token = useSelector((state) => state.auth.token); // Replace with your auth state
+  const token = useSelector((state) => state.auth.token);
 
   const validate = () => {
     const newErrors = {};
@@ -23,14 +23,17 @@ export default function CreateReview() {
     setIsNotificationOn(true);
 
     try {
-      const response = await fetch("/api/reviews/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Send token in the Authorization header
-        },
-        body: JSON.stringify({ text: reviewText }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ message: reviewText }),
+        }
+      );
 
       const data = await response.json();
 
@@ -50,7 +53,7 @@ export default function CreateReview() {
   };
 
   return (
-    <div className="mx-auto w-full lg:w-2/3 p-2 md:p-8 bg-white rounded-lg shadow-md">
+    <div className="mx-auto lg:w-1/2 p-2 md:p-8 bg-white rounded-lg shadow-md">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold my-3">Post a Review</h1>
         <p className="text-sm text-gray-600">Share your thoughts with us</p>
@@ -65,7 +68,8 @@ export default function CreateReview() {
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
             placeholder="Write your review here"
-            className="w-full h-60 px-3 py-2 border rounded-md focus:outline-green-500"
+            className="w-full h-36 px-3 py-2 border rounded-md focus:outline-green-500"
+            maxLength={250}
           ></textarea>
           {errors.text && <p className="text-red-500 text-sm">{errors.text}</p>}
         </div>

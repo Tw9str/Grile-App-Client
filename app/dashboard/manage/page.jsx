@@ -4,8 +4,10 @@ import ManageCategories from "@/components/dashboard/manage/ManageCategories";
 import ManageExams from "@/components/dashboard/manage/ManageExams";
 import ManageUsers from "@/components/dashboard/manage/ManageUsers";
 import ManagePlans from "@/components/dashboard/manage/ManagePlans";
+import ManageReviews from "@/components/dashboard/manage/ManageReviews";
 import ManagePosts from "@/components/dashboard/manage/ManagePosts";
 import LoadingSpinner from "@/components/widgets/LoadingSpinner";
+import NoData from "@/components/shared/NoData";
 import Accordion from "@/components/widgets/Accordion";
 
 export default function Manage() {
@@ -14,48 +16,105 @@ export default function Manage() {
   const [users, setUsers] = useState([]);
   const [plans, setPlans] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [reviews, setReviews] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({
+    categories: null,
+    exams: null,
+    users: null,
+    plans: null,
+    posts: null,
+    reviews: null,
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategories = async () => {
       try {
-        const [
-          categoriesResponse,
-          examsResponse,
-          usersResponse,
-          plansResponse,
-          postsResponse,
-        ] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/categories`).then(
-            (res) => res.json()
-          ),
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/exams`).then((res) =>
-            res.json()
-          ),
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/users`).then((res) =>
-            res.json()
-          ),
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/plans`).then((res) =>
-            res.json()
-          ),
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/posts`).then((res) =>
-            res.json()
-          ), // Fetching posts data
-        ]);
-
-        setCategories(categoriesResponse);
-        setExams(examsResponse);
-        setUsers(usersResponse);
-        setPlans(plansResponse);
-        setPosts(postsResponse); // Setting posts data
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/categories`
+        );
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+        setCategories(data);
       } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+        setErrors((prev) => ({ ...prev, categories: error.message }));
       }
     };
 
-    fetchData();
+    const fetchExams = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/exams`
+        );
+        if (!res.ok) throw new Error("Failed to fetch exams");
+        const data = await res.json();
+        setExams(data);
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, exams: error.message }));
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/users`
+        );
+        if (!res.ok) throw new Error("Failed to fetch users");
+        const data = await res.json();
+        setUsers(data);
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, users: error.message }));
+      }
+    };
+
+    const fetchPlans = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/plans`
+        );
+        if (!res.ok) throw new Error("Failed to fetch plans");
+        const data = await res.json();
+        setPlans(data);
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, plans: error.message }));
+      }
+    };
+
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/posts`
+        );
+        if (!res.ok) throw new Error("Failed to fetch posts");
+        const data = await res.json();
+        setPosts(data);
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, posts: error.message }));
+      }
+    };
+
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews`
+        );
+        if (!res.ok) throw new Error("Failed to fetch reviews");
+        const data = await res.json();
+        setReviews(data);
+      } catch (error) {
+        setErrors((prev) => ({ ...prev, reviews: error.message }));
+      }
+    };
+
+    Promise.all([
+      fetchCategories(),
+      fetchExams(),
+      fetchUsers(),
+      fetchPlans(),
+      fetchPosts(),
+      fetchReviews(),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const handleCategoryDelete = (id) => {
@@ -120,42 +179,74 @@ export default function Manage() {
     );
   };
 
+  const handleReviewDelete = (id) => {
+    setReviews((prevReviews) =>
+      prevReviews.filter((review) => review._id !== id)
+    );
+  };
+
   if (loading) return <LoadingSpinner />;
 
   return (
     <section className="grid gap-4">
       <Accordion title="Manage Categories">
-        <ManageCategories
-          categories={categories}
-          onDelete={handleCategoryDelete}
-          onUpdate={handleCategoryUpdate}
-        />
+        {errors.categories ? (
+          <NoData description={errors.categories} />
+        ) : (
+          <ManageCategories
+            categories={categories}
+            onDelete={handleCategoryDelete}
+            onUpdate={handleCategoryUpdate}
+          />
+        )}
       </Accordion>
       <Accordion title="Manage Exams">
-        <ManageExams
-          exams={exams}
-          onDelete={handleExamDelete}
-          onUpdate={handleExamUpdate}
-        />
+        {errors.exams ? (
+          <NoData description={errors.exams} />
+        ) : (
+          <ManageExams
+            exams={exams}
+            onDelete={handleExamDelete}
+            onUpdate={handleExamUpdate}
+          />
+        )}
       </Accordion>
       <Accordion title="Manage Users">
-        <ManageUsers
-          users={users}
-          onDelete={handleUserDelete}
-          onPromote={handleUserPromote}
-          onUpdate={handleUserUpdate}
-        />
+        {errors.users ? (
+          <NoData description={errors.users} />
+        ) : (
+          <ManageUsers
+            users={users}
+            onDelete={handleUserDelete}
+            onPromote={handleUserPromote}
+            onUpdate={handleUserUpdate}
+          />
+        )}
       </Accordion>
       <Accordion title="Manage Plans">
-        <ManagePlans plans={plans} onDelete={handlePlanDelete} />
+        {errors.plans ? (
+          <NoData description={errors.plans} />
+        ) : (
+          <ManagePlans plans={plans} onDelete={handlePlanDelete} />
+        )}
       </Accordion>
-      <Accordion title="Manage Reviews">Reviews</Accordion>
+      <Accordion title="Manage Reviews">
+        {errors.reviews ? (
+          <NoData description={errors.reviews} />
+        ) : (
+          <ManageReviews reviews={reviews} onDelete={handleReviewDelete} />
+        )}
+      </Accordion>
       <Accordion title="Manage Posts">
-        <ManagePosts
-          posts={posts}
-          onDelete={handlePostDelete}
-          onUpdate={handlePostUpdate}
-        />
+        {errors.posts ? (
+          <NoData description={errors.posts} />
+        ) : (
+          <ManagePosts
+            posts={posts}
+            onDelete={handlePostDelete}
+            onUpdate={handlePostUpdate}
+          />
+        )}
       </Accordion>
     </section>
   );

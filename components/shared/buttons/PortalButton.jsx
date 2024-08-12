@@ -17,8 +17,7 @@ export default function PortalButton({ user, token, children }) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        router.push(data.url);
+        window.open(data.url, "_blank");
       } else {
         console.error("Failed to create customer portal session");
       }
