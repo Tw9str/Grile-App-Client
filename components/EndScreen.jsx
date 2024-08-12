@@ -8,7 +8,7 @@ export default function EndScreen({
   questionPoints,
 }) {
   return (
-    <div className="max-w-4xl bg-white p-1 md:p-6 rounded-lg shadow-lg">
+    <div className="w-full max-w-4xl bg-white p-1 md:p-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Exam Results</h2>
       <p className="text-lg text-gray-700 mb-4">
         You have scored{" "}
@@ -44,7 +44,7 @@ export default function EndScreen({
             </div>
             {question.image && (
               <Image
-                src={`${process.env.NEXT_PUBLIC_API_BASE}/questions/${question.image}`}
+                src={`${process.env.NEXT_PUBLIC_API_BASE}/${question.image}`}
                 width={800}
                 height={800}
                 alt={`Question ${questionIndex + 1}`}

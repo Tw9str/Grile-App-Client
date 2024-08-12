@@ -4,7 +4,7 @@ import Plan from "./Plan";
 import LoadingSpinner from "@/components/widgets/LoadingSpinner";
 import NoData from "@/components/shared/NoData"; // Make sure to import the NoData component
 
-export default function Plans() {
+export default function Plans({ reset }) {
   const [plans, setPlans] = useState([]);
   const [status, setStatus] = useState({ loading: true, error: null });
 
@@ -38,7 +38,9 @@ export default function Plans() {
   return (
     <section
       id="plans"
-      className="max-w-7xl mx-auto mt-20 pt-4 px-4 sm:px-6 md:px-8"
+      className={`max-w-7xl mx-auto ${
+        reset ? "" : "mt-20"
+      } pt-4 px-4 sm:px-6 md:px-8`}
     >
       <div className="mx-auto text-center">
         <h2 className="text-lg font-semibold p-2 w-fit mx-auto text-green-500">

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { MdiEye, MdiEyeOff } from "@/components/dashboard/Icons"; // Adjust the path based on your project structure
+import { MdiEye, MdiEyeOff } from "@/components/dashboard/Icons";
 
 const Profile = () => {
   const [initialFormData, setInitialFormData] = useState({
@@ -15,13 +15,19 @@ const Profile = () => {
     role: "",
     plan: "",
   });
+
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
+    username: "",
+    email: "",
+    role: "",
+    plan: "",
   });
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
@@ -56,22 +62,18 @@ const Profile = () => {
         );
 
         const data = await response.json();
-        setInitialFormData({
+        const formDataFromServer = {
           firstname: data.firstname || "",
           lastname: data.lastname || "",
           username: data.username || "",
           email: data.email || "",
           role: data.role || "",
           plan: data.plan || "",
-        });
+        };
+        setInitialFormData(formDataFromServer);
         setFormData((prevFormData) => ({
           ...prevFormData,
-          firstname: data.firstname || "",
-          lastname: data.lastname || "",
-          username: data.username || "",
-          email: data.email || "",
-          role: data.role || "",
-          plan: data.plan || "",
+          ...formDataFromServer,
         }));
       } catch (error) {
         console.error("Error fetching user data", error);
@@ -83,7 +85,10 @@ const Profile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value || "", // Ensures the value is always a string
+    }));
 
     // Check if any field has changed from the initial form data
     setIsChanged(
@@ -164,6 +169,7 @@ const Profile = () => {
     const updatedFields = {};
     if (formData.firstname) updatedFields.firstname = formData.firstname;
     if (formData.lastname) updatedFields.lastname = formData.lastname;
+    if (formData.username) updatedFields.username = formData.username;
     if (formData.currentPassword)
       updatedFields.currentPassword = formData.currentPassword;
     if (formData.newPassword) updatedFields.newPassword = formData.newPassword;
@@ -192,7 +198,7 @@ const Profile = () => {
       setMessage("An error occurred. Please try again later.");
     } finally {
       setLoading(false);
-      setIsChanged(false); // Reset the isChanged state after submission
+      setIsChanged(false);
     }
   };
 
@@ -212,7 +218,7 @@ const Profile = () => {
               type="text"
               id="firstname"
               name="firstname"
-              value={formData.firstname}
+              value={formData.firstname || ""}
               onChange={handleInputChange}
               placeholder="First Name"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
@@ -227,7 +233,7 @@ const Profile = () => {
               type="text"
               id="lastname"
               name="lastname"
-              value={formData.lastname}
+              value={formData.lastname || ""}
               onChange={handleInputChange}
               placeholder="Last Name"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
@@ -247,7 +253,7 @@ const Profile = () => {
               type={showPassword.currentPassword ? "text" : "password"}
               id="currentPassword"
               name="currentPassword"
-              value={formData.currentPassword}
+              value={formData.currentPassword || ""}
               onChange={handleInputChange}
               placeholder="Current Password"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
@@ -274,7 +280,7 @@ const Profile = () => {
               type={showPassword.newPassword ? "text" : "password"}
               id="newPassword"
               name="newPassword"
-              value={formData.newPassword}
+              value={formData.newPassword || ""}
               onChange={handleInputChange}
               onFocus={() => setPasswordFocused(true)}
               placeholder="New Password"
@@ -361,7 +367,7 @@ const Profile = () => {
               type={showPassword.confirmPassword ? "text" : "password"}
               id="confirmPassword"
               name="confirmPassword"
-              value={formData.confirmPassword}
+              value={formData.confirmPassword || ""}
               onChange={handleInputChange}
               placeholder="Confirm New Password"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
@@ -392,9 +398,10 @@ const Profile = () => {
               type="text"
               id="username"
               name="username"
-              value={formData.username}
-              readOnly
-              className="w-full px-3 py-2 border rounded-md bg-gray-100"
+              value={formData.username || ""}
+              onChange={handleInputChange}
+              placeholder="Username"
+              className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
           </div>
 
@@ -406,7 +413,7 @@ const Profile = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={formData.email || ""}
               readOnly
               className="w-full px-3 py-2 border rounded-md bg-gray-100"
             />
@@ -422,7 +429,7 @@ const Profile = () => {
               type="text"
               id="role"
               name="role"
-              value={formData.role}
+              value={formData.role || ""}
               readOnly
               className="w-full px-3 py-2 border rounded-md bg-gray-100"
             />
@@ -436,7 +443,7 @@ const Profile = () => {
               type="text"
               id="plan"
               name="plan"
-              value={formData.plan}
+              value={formData.plan || ""}
               readOnly
               className="w-full px-3 py-2 border rounded-md bg-gray-100"
             />

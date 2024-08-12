@@ -5,7 +5,10 @@ export default function ExamCategories({ categories }) {
     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center items-center">
       {categories?.map(({ _id, title, examCount, plan, createdAt, user }) => {
         return (
-          <li key={_id} className="bg-white rounded-lg shadow-lg p-6">
+          <li
+            key={_id}
+            className="bg-white rounded-lg shadow-lg p-6 text-sm md:text-base"
+          >
             <Category
               title={title}
               examCount={examCount}

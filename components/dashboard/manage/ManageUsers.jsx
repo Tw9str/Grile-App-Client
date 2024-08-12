@@ -22,7 +22,7 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
   const handleConfirmDelete = async () => {
     if (userToDelete) {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/users/${userToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/users/delete/${userToDelete}`,
         {
           method: "DELETE",
           headers: {
@@ -30,7 +30,7 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
           },
         }
       );
-      onDelete(userToDelete); // Update parent state
+      onDelete(userToDelete);
       setShowOverlay(false);
       setUserToDelete(null);
     }
