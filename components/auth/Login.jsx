@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { setLogin } from "@/state/authSlice";
+import { setToken } from "@/state/authSlice";
 import { useDispatch } from "react-redux";
 import { MdiEye, MdiEyeOff } from "@/components/dashboard/Icons";
 
@@ -43,7 +43,7 @@ export default function Login() {
       const data = await response.json();
       setMessage(data.message);
       if (data.success) {
-        dispatch(setLogin(data));
+        dispatch(setToken(data));
       } else {
         setMessage(data.message || "Login failed. Please try again.");
       }

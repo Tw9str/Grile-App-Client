@@ -12,18 +12,24 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
-  // Fetch the latest 8 exams from the API
+
   useEffect(() => {
     const fetchExams = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/exams`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/exams`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch exams");
         }
         const data = await response.json();
-        setExams(data.slice(0, 8)); // Ensure only 8 exams are displayed
+        setExams(data.slice(0, 8));
       } catch (error) {
         console.error("Error fetching exams:", error);
       } finally {
@@ -51,7 +57,6 @@ export default function Dashboard() {
 
       <h1 className="text-3xl font-bold mb-8 text-center">Dashboard</h1>
 
-      {/* Enhanced Quick Access Boxes */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Link
           href="/dashboard/profile"
@@ -106,7 +111,6 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Latest Exams Section */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Latest Exams</h2>
         {exams.length > 0 ? (
