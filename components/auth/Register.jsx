@@ -113,16 +113,16 @@ export default function Register() {
   return (
     <>
       <div className="mb-8 text-center">
-        <h1 className="text-gray-950 my-3 text-4xl font-bold">Register</h1>
+        <h1 className="text-gray-950 my-3 text-4xl font-bold">Înregistrare</h1>
         <p className="text-gray-600 text-sm">
-          Create an account to access features
+          Creează un cont pentru a accesa funcționalitățile
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-10">
         <div className="space-y-2">
           <div className="space-y-2">
             <label htmlFor="username" className="text-gray-600 block text-sm">
-              Username
+              Nume de utilizator
             </label>
             <input
               type="text"
@@ -139,7 +139,7 @@ export default function Register() {
           </div>
           <div className="space-y-2">
             <label htmlFor="email" className="text-gray-600 block text-sm">
-              Email address
+              Adresa de email
             </label>
             <input
               type="email"
@@ -157,7 +157,7 @@ export default function Register() {
           <div className="space-y-2">
             <div className="text-gray-600 flex justify-between mb-2">
               <label htmlFor="password" className="text-sm">
-                Password
+                Parolă
               </label>
             </div>
             <div className="relative">
@@ -198,8 +198,7 @@ export default function Register() {
                       : "text-red-600"
                   } transition-colors duration-300`}
                 >
-                  {passwordValidation.length ? "✔" : "✖"} At least 8 characters
-                  long.
+                  {passwordValidation.length ? "✔" : "✖"} Cel puțin 8 caractere.
                 </li>
                 <li
                   className={`${
@@ -208,8 +207,8 @@ export default function Register() {
                       : "text-red-600"
                   } transition-colors duration-300`}
                 >
-                  {passwordValidation.uppercase ? "✔" : "✖"} At least one
-                  uppercase letter.
+                  {passwordValidation.uppercase ? "✔" : "✖"} Cel puțin o literă
+                  majusculă.
                 </li>
                 <li
                   className={`${
@@ -218,15 +217,15 @@ export default function Register() {
                       : "text-red-600"
                   } transition-colors duration-300`}
                 >
-                  {passwordValidation.lowercase ? "✔" : "✖"} At least one
-                  lowercase letter.
+                  {passwordValidation.lowercase ? "✔" : "✖"} Cel puțin o literă
+                  mică.
                 </li>
                 <li
                   className={`${
                     passwordValidation.digit ? "text-green-600" : "text-red-600"
                   } transition-colors duration-300`}
                 >
-                  {passwordValidation.digit ? "✔" : "✖"} At least one digit.
+                  {passwordValidation.digit ? "✔" : "✖"} Cel puțin o cifră.
                 </li>
                 <li
                   className={`${
@@ -235,8 +234,8 @@ export default function Register() {
                       : "text-red-600"
                   } transition-colors duration-300`}
                 >
-                  {passwordValidation.specialChar ? "✔" : "✖"} At least one
-                  special character (e.g., !@#$%^&*).
+                  {passwordValidation.specialChar ? "✔" : "✖"} Cel puțin un
+                  caracter special (de exemplu, !@#$%^&*).
                 </li>
               </ul>
             </div>
@@ -247,7 +246,7 @@ export default function Register() {
               htmlFor="confirmPassword"
               className="text-gray-600 block text-sm"
             >
-              Confirm Password
+              Confirmă Parola
             </label>
             <div className="relative">
               <input
@@ -272,7 +271,7 @@ export default function Register() {
               </button>
             </div>
             {!passwordMatch && formData.confirmPassword && (
-              <p className="text-sm text-red-600">Passwords do not match</p>
+              <p className="text-sm text-red-600">Parolele nu se potrivesc</p>
             )}
           </div>
         </div>
@@ -286,7 +285,7 @@ export default function Register() {
               }`}
               disabled={loading}
             >
-              {loading ? "Signing up..." : "Sign up"}
+              {loading ? "Înregistrare..." : "Înregistrează-te"}
             </button>
             {message.general && (
               <p className="text-sm text-red-600 text-center">
@@ -295,9 +294,9 @@ export default function Register() {
             )}
           </div>
           <p className="text-gray-600 px-6 text-sm text-center">
-            Already have an account?{" "}
+            Ai deja un cont?{" "}
             <Link href="/auth/login" className="text-gray-950 hover:underline">
-              Sign in
+              Autentificare
             </Link>
             .
           </p>

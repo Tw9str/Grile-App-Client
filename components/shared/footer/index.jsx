@@ -17,16 +17,16 @@ export default function Footer() {
             </p>
           </div>
           <div>
-            <h2 className="text-lg font-bold sm:text-2xl">COMPANY</h2>
+            <h2 className="text-lg font-bold sm:text-2xl">COMPANIE</h2>
             <ul className="flex flex-col gap-4 mt-4">
               <li>
-                <Link href="#">About</Link>
+                <Link href="#">Despre Noi</Link>
               </li>
               <li>
-                <Link href="#">Services</Link>
+                <Link href="#">Servicii</Link>
               </li>
               <li>
-                <Link href="#">Reviews</Link>
+                <Link href="#">Recenzii</Link>
               </li>
               <li>
                 <Link href="#">Blog</Link>
@@ -37,10 +37,10 @@ export default function Footer() {
             <h2 className="text-lg font-bold sm:text-2xl">LEGAL</h2>
             <ul className="flex flex-col gap-4 mt-4">
               <li>
-                <Link href="#">Privacy Policy</Link>
+                <Link href="#">Politica de Confidențialitate</Link>
               </li>
               <li>
-                <Link href="#">Terms & Conditions</Link>
+                <Link href="#">Termeni și Condiții</Link>
               </li>
             </ul>
           </div>
@@ -48,7 +48,8 @@ export default function Footer() {
         </div>
         <div className="mt-10 pt-10">
           <p className="capitalize">
-            &copy; {new Date().getFullYear()} GrileInfo. All rights reserved.
+            &copy; {new Date().getFullYear()} GrileInfo. Toate drepturile
+            rezervate.
           </p>
         </div>
       </div>

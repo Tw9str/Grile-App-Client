@@ -52,12 +52,11 @@ const ContactForm = () => {
         <h2 className="text-lg font-semibold p-2 w-fit mx-auto text-green-500">
           Contact
         </h2>
-        <p className="font-bold text-5xl mt-2">Contact Us </p>
+        <p className="font-bold text-5xl mt-2">Contactaţi-ne</p>
       </div>
       <div className="grid lg:grid-cols-2 gap-16 mt-10">
         <ContactSvg />
         <form className="space-y-8" onSubmit={handleSubmit}>
-          {/* Error Message */}
           {message && (
             <div className="text-center lg:text-left text-sm mb-4">
               <p
@@ -71,10 +70,9 @@ const ContactForm = () => {
           )}
 
           <div className="space-y-4">
-            {/* Name */}
             <div className="space-y-2">
               <label htmlFor="name" className="block text-sm text-gray-600">
-                Name
+                Nume
               </label>
               <input
                 type="text"
@@ -82,12 +80,11 @@ const ContactForm = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="Your Name"
+                placeholder="Numele tău"
                 className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
               />
             </div>
 
-            {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm text-gray-600">
                 Email
@@ -98,22 +95,21 @@ const ContactForm = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="Your Email"
+                placeholder="Email-ul tău"
                 className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
               />
             </div>
 
-            {/* Message */}
             <div className="space-y-2">
               <label htmlFor="message" className="block text-sm text-gray-600">
-                Message
+                Mesaj
               </label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
-                placeholder="Your Message"
+                placeholder="Mesajul tău"
                 rows="5"
                 className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
               ></textarea>
@@ -128,7 +124,7 @@ const ContactForm = () => {
               }`}
               disabled={loading}
             >
-              {loading ? "Sending..." : "Send Message"}
+              {loading ? "Se trimite..." : "Trimite mesajul"}
             </button>
           </div>
         </form>

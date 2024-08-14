@@ -38,7 +38,7 @@ export default function Menu() {
         </li>
         <li className="border-b-2 border-b-transparent hover:border-b-2 hover:border-green-500 hover:text-green-500 duration-300">
           <Link className="py-4" href="/#plans">
-            Plans
+            Planuri
           </Link>
         </li>
         <li className="border-b-2 border-b-transparent hover:border-b-2 hover:border-green-500 hover:text-green-500 duration-300">

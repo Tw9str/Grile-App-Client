@@ -87,10 +87,9 @@ const Profile = () => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value || "", // Ensures the value is always a string
+      [name]: value || "",
     }));
 
-    // Check if any field has changed from the initial form data
     setIsChanged(
       Object.keys(formData).some(
         (key) => formData[key] !== initialFormData[key]
@@ -205,14 +204,16 @@ const Profile = () => {
   return (
     <div className="w-full lg:w-2/3 p-2 md:p-8 mx-auto bg-white rounded-lg shadow-md">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold my-3">Account Overview</h1>
-        <p className="text-sm text-gray-600">Update your profile details</p>
+        <h1 className="text-4xl font-bold my-3">Prezentare Cont</h1>
+        <p className="text-sm text-gray-600">
+          Actualizează detaliile profilului tău
+        </p>
       </div>
       <form className="space-y-8" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
             <label htmlFor="firstname" className="block text-sm text-gray-600">
-              First Name
+              Prenume
             </label>
             <input
               type="text"
@@ -220,14 +221,14 @@ const Profile = () => {
               name="firstname"
               value={formData.firstname || ""}
               onChange={handleInputChange}
-              placeholder="First Name"
+              placeholder="Prenume"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
           </div>
 
           <div className="space-y-4">
             <label htmlFor="lastname" className="block text-sm text-gray-600">
-              Last Name
+              Nume
             </label>
             <input
               type="text"
@@ -235,7 +236,7 @@ const Profile = () => {
               name="lastname"
               value={formData.lastname || ""}
               onChange={handleInputChange}
-              placeholder="Last Name"
+              placeholder="Nume"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
           </div>
@@ -246,7 +247,7 @@ const Profile = () => {
             htmlFor="currentPassword"
             className="block text-sm text-gray-600"
           >
-            Current Password
+            Parola Actuală
           </label>
           <div className="relative">
             <input
@@ -255,7 +256,7 @@ const Profile = () => {
               name="currentPassword"
               value={formData.currentPassword || ""}
               onChange={handleInputChange}
-              placeholder="Current Password"
+              placeholder="Parola Actuală"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
             <button
@@ -273,7 +274,7 @@ const Profile = () => {
         </div>
         <div className="space-y-4">
           <label htmlFor="newPassword" className="block text-sm text-gray-600">
-            New Password
+            Parolă Nouă
           </label>
           <div className="relative">
             <input
@@ -283,7 +284,7 @@ const Profile = () => {
               value={formData.newPassword || ""}
               onChange={handleInputChange}
               onFocus={() => setPasswordFocused(true)}
-              placeholder="New Password"
+              placeholder="Parolă Nouă"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
             <button
@@ -311,8 +312,8 @@ const Profile = () => {
                   passwordValidation.length ? "text-green-600" : "text-red-600"
                 } transition-colors duration-300`}
               >
-                {passwordValidation.length ? "✔" : "✖"} At least 8 characters
-                long.
+                {passwordValidation.length ? "✔" : "✖"} Cel puțin 8 caractere
+                lung.
               </li>
               <li
                 className={`${
@@ -321,8 +322,8 @@ const Profile = () => {
                     : "text-red-600"
                 } transition-colors duration-300`}
               >
-                {passwordValidation.uppercase ? "✔" : "✖"} At least one
-                uppercase letter.
+                {passwordValidation.uppercase ? "✔" : "✖"} Cel puțin o literă
+                majusculă.
               </li>
               <li
                 className={`${
@@ -331,15 +332,15 @@ const Profile = () => {
                     : "text-red-600"
                 } transition-colors duration-300`}
               >
-                {passwordValidation.lowercase ? "✔" : "✖"} At least one
-                lowercase letter.
+                {passwordValidation.lowercase ? "✔" : "✖"} Cel puțin o literă
+                mică.
               </li>
               <li
                 className={`${
                   passwordValidation.digit ? "text-green-600" : "text-red-600"
                 } transition-colors duration-300`}
               >
-                {passwordValidation.digit ? "✔" : "✖"} At least one digit.
+                {passwordValidation.digit ? "✔" : "✖"} Cel puțin o cifră.
               </li>
               <li
                 className={`${
@@ -348,8 +349,8 @@ const Profile = () => {
                     : "text-red-600"
                 } transition-colors duration-300`}
               >
-                {passwordValidation.specialChar ? "✔" : "✖"} At least one
-                special character (e.g., !@#$%^&*).
+                {passwordValidation.specialChar ? "✔" : "✖"} Cel puțin un
+                caracter special (de ex., !@#$%^&*).
               </li>
             </ul>
           </div>
@@ -360,7 +361,7 @@ const Profile = () => {
             htmlFor="confirmPassword"
             className="block text-sm text-gray-600"
           >
-            Confirm New Password
+            Confirmă Parola Nouă
           </label>
           <div className="relative">
             <input
@@ -369,7 +370,7 @@ const Profile = () => {
               name="confirmPassword"
               value={formData.confirmPassword || ""}
               onChange={handleInputChange}
-              placeholder="Confirm New Password"
+              placeholder="Confirmă Parola Nouă"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
             <button
@@ -385,14 +386,14 @@ const Profile = () => {
             </button>
           </div>
           {!passwordMatch && formData.confirmPassword && (
-            <p className="text-sm text-red-600">Passwords do not match</p>
+            <p className="text-sm text-red-600">Parolele nu se potrivesc</p>
           )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
             <label htmlFor="username" className="block text-sm text-gray-600">
-              Username
+              Nume de utilizator
             </label>
             <input
               type="text"
@@ -400,7 +401,7 @@ const Profile = () => {
               name="username"
               value={formData.username || ""}
               onChange={handleInputChange}
-              placeholder="Username"
+              placeholder="Nume de utilizator"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
             />
           </div>
@@ -423,7 +424,7 @@ const Profile = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
             <label htmlFor="role" className="block text-sm text-gray-600">
-              Role
+              Rol
             </label>
             <input
               type="text"
@@ -458,7 +459,7 @@ const Profile = () => {
             }`}
             disabled={loading || !isChanged}
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? "Salvare..." : "Salvează Modificările"}
           </button>
           {message && (
             <p className="text-sm text-red-600 text-center mt-4">{message}</p>
