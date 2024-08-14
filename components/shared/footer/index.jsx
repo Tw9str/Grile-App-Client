@@ -20,16 +20,16 @@ export default function Footer() {
             <h2 className="text-lg font-bold sm:text-2xl">COMPANIE</h2>
             <ul className="flex flex-col gap-4 mt-4">
               <li>
-                <Link href="#">Despre Noi</Link>
+                <Link href="/about">Despre Noi</Link>
               </li>
               <li>
-                <Link href="#">Servicii</Link>
+                <Link href="#services">Servicii</Link>
               </li>
               <li>
-                <Link href="#">Recenzii</Link>
+                <Link href="#reviews">Recenzii</Link>
               </li>
               <li>
-                <Link href="#">Blog</Link>
+                <Link href="#blog">Blog</Link>
               </li>
             </ul>
           </div>

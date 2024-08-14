@@ -41,7 +41,10 @@ export default function Reviews() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto mt-20 pt-4 px-4 sm:px-6 md:px-8">
+    <section
+      id="reviews"
+      className="max-w-7xl mx-auto mt-20 pt-4 px-4 sm:px-6 md:px-8"
+    >
       <div className="mx-auto max-w-2xl">
         <h2 className="text-lg font-semibold p-2 w-fit mx-auto text-green-500">
           Clientii nostri

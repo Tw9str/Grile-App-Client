@@ -6,7 +6,7 @@ import { EditIcon, DeleteIcon } from "../Icons";
 import OverlayAlert from "@/components/widgets/OverlayAlert";
 import NoData from "@/components/shared/NoData";
 
-const ManagePosts = ({ posts, onDelete }) => {
+const ManagePosts = ({ posts, onDelete, onUpdate }) => {
   const token = useSelector((state) => state.auth.token);
   const [showOverlay, setShowOverlay] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
