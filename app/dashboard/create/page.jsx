@@ -6,12 +6,13 @@ import AddCategory from "@/components/dashboard/examForms/AddCategory";
 import CreatePlan from "@/components/create/CreatePlan";
 import Accordion from "@/components/widgets/Accordion";
 import CreatePost from "@/components/create/CreatePost";
+import { useSelector } from "react-redux";
 
 export default function CreateExamPage() {
   const [categories, setCategories] = useState([]);
-
+  const token = useSelector((state) => state.auth.token);
   const loadCategories = async () => {
-    const fetchedCategories = await fetchCategories();
+    const fetchedCategories = await fetchCategories(token);
     setCategories(fetchedCategories);
   };
 

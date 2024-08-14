@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Notification from "@/components/widgets/Notification";
-import { selectAuthToken } from "@/utils/token";
 import { useSelector } from "react-redux";
 
 export default function CreatePlan() {
@@ -11,20 +10,19 @@ export default function CreatePlan() {
     name: "",
     description: "",
     price: 0,
-    currency: "ron", // Default currency set to Romanian Leu
+    currency: "ron",
     interval: "month",
-    features: [""], // Start with one feature field
+    features: [""],
     popular: false,
   });
   const [errors, setErrors] = useState({});
-  const token = useSelector(selectAuthToken);
+  const token = useSelector((state) => state.auth.token);
 
   const currencyOptions = [
     { value: "ron", label: "Romanian Leu (RON)" },
     { value: "usd", label: "US Dollar (USD)" },
     { value: "eur", label: "Euro (EUR)" },
     { value: "gbp", label: "British Pound (GBP)" },
-    // Add more currencies as needed
   ];
 
   const validate = () => {
@@ -61,7 +59,7 @@ export default function CreatePlan() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/plans/create`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/plan/create`,
         {
           method: "POST",
 

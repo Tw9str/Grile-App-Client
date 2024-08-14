@@ -11,12 +11,12 @@ export default function CreatePost() {
     isVisible: false,
   });
   const [postData, setPostData] = useState({
-    image: null, // Image file object
+    image: null,
     tag: "",
     title: "",
     description: "",
   });
-  const [imagePreview, setImagePreview] = useState(null); // Image preview URL
+  const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   const token = useSelector((state) => state.auth.token);
 
@@ -57,7 +57,7 @@ export default function CreatePost() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/posts/create`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/create/post`,
         {
           method: "POST",
           headers: {

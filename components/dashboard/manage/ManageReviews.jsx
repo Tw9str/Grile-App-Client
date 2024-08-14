@@ -26,7 +26,7 @@ const ManageReviews = ({ reviews, onDelete }) => {
   const handleConfirmDelete = async () => {
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews/${reviewToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/review/delete/${reviewToDelete}`,
         {
           method: "DELETE",
         }
@@ -51,7 +51,7 @@ const ManageReviews = ({ reviews, onDelete }) => {
   const handleApprove = async (reviewId) => {
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews/approve/${reviewId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/review/approve/${reviewId}`,
         {
           method: "PATCH",
         }

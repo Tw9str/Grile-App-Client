@@ -1,13 +1,25 @@
-export async function fetchExam(slug) {
+export async function fetchExam(slug, token) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE}/api/exams/exam/${slug}`,
       {
-        cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
-    return response.json();
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        error: errorData.message,
+        plan: errorData.plan || "Failed to fetch exam data",
+      };
+    }
+
+    const exam = await response.json();
+    return { exam };
   } catch (error) {
-    console.error("Error fetching exam:", error);
+    return { error: error.message || "An unexpected error occurred" };
   }
 }

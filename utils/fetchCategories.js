@@ -1,8 +1,13 @@
-export async function fetchCategories() {
+export async function fetchCategories(token) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE}/api/categories`,
-      { cache: "no-store" }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+      }
     );
 
     return response.json();

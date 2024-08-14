@@ -140,7 +140,7 @@ export default function CreateExam({ categories }) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/exams/create-exam`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam`,
         {
           method: "POST",
           headers: {

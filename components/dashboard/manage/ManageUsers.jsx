@@ -22,7 +22,7 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
   const handleConfirmDelete = async () => {
     if (userToDelete) {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/users/delete/${userToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/user/delete/${userToDelete}`,
         {
           method: "DELETE",
           headers: {
@@ -46,7 +46,7 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
     if (userToPromote) {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/users/promote/${userToPromote}`,
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/user/promote/${userToPromote}`,
           {
             method: "PATCH",
             headers: {
@@ -75,7 +75,7 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
   const updatePlan = async (userId, newPlan) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/users/update/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/user/update/${userId}`,
         {
           method: "PATCH",
           headers: {

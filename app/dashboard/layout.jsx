@@ -20,9 +20,9 @@ export default function Layout({ children }) {
         }
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/updateToken`,
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/users/me`,
           {
-            method: "POST",
+            method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",

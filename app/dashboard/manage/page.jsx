@@ -9,6 +9,7 @@ import ManagePosts from "@/components/dashboard/manage/ManagePosts";
 import LoadingSpinner from "@/components/widgets/LoadingSpinner";
 import NoData from "@/components/shared/NoData";
 import Accordion from "@/components/widgets/Accordion";
+import { useSelector } from "react-redux";
 
 export default function Manage() {
   const [categories, setCategories] = useState([]);
@@ -17,6 +18,7 @@ export default function Manage() {
   const [plans, setPlans] = useState([]);
   const [posts, setPosts] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const token = useSelector((state) => state.auth.token);
 
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({
@@ -32,7 +34,12 @@ export default function Manage() {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/categories`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/categories`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
@@ -45,7 +52,12 @@ export default function Manage() {
     const fetchExams = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/exams`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/exams`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch exams");
         const data = await res.json();
@@ -58,7 +70,12 @@ export default function Manage() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/users`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
@@ -71,7 +88,12 @@ export default function Manage() {
     const fetchPlans = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/plans`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/plans`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch plans");
         const data = await res.json();
@@ -84,7 +106,12 @@ export default function Manage() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/posts`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/posts`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch posts");
         const data = await res.json();
@@ -97,7 +124,12 @@ export default function Manage() {
     const fetchReviews = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews`
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/reviews`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok) throw new Error("Failed to fetch reviews");
         const data = await res.json();

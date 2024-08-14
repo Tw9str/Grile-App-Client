@@ -15,7 +15,7 @@ export default function AddCategory({ onCategoryAdded }) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/categories/add`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/create/category`,
         {
           method: "POST",
           headers: {

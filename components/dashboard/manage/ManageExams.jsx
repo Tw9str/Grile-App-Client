@@ -19,7 +19,7 @@ const ManageExams = ({ exams, onDelete, onUpdate }) => {
   const handleConfirm = async () => {
     if (examToDelete) {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/exams/delete/${examToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/exam/delete/${examToDelete}`,
         {
           method: "DELETE",
           headers: {
@@ -40,7 +40,7 @@ const ManageExams = ({ exams, onDelete, onUpdate }) => {
 
   const handlePlanChange = async (examId, newPlan) => {
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/exams/exam/edit/${examId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam/edit/${examId}`,
       {
         method: "PUT",
         headers: {
@@ -55,7 +55,7 @@ const ManageExams = ({ exams, onDelete, onUpdate }) => {
 
   const handleVisibilityChange = async (examId, newVisibility) => {
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/exams/exam/edit/${examId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam/edit/${examId}`,
       {
         method: "PUT",
         headers: {

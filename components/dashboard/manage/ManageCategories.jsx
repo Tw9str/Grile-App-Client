@@ -20,7 +20,7 @@ const ManageCategories = ({ categories, onDelete, onUpdate }) => {
   const handleConfirm = async () => {
     if (categoryToDelete) {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/categories/delete/${categoryToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/category/delete/${categoryToDelete}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -34,7 +34,7 @@ const ManageCategories = ({ categories, onDelete, onUpdate }) => {
 
   const handleUpdate = async (categoryId, data) => {
     await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/categories/update/${categoryId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/category/update/${categoryId}`,
       {
         method: "PUT",
         headers: {

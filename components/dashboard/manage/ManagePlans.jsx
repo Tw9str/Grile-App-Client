@@ -19,7 +19,7 @@ const ManagePlans = ({ plans, onDelete }) => {
   const handleConfirm = async () => {
     if (planToDelete) {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/plans/delete/${planToDelete}`,
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/plan/delete/${planToDelete}`,
         {
           method: "DELETE",
           headers: {
