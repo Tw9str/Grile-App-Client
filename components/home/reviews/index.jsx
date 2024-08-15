@@ -58,9 +58,9 @@ export default function Reviews() {
           reviews.map((review) => (
             <Review
               key={review._id}
-              message={review.message}
-              username={review.user?.username}
-              avatarUrl={review.user?.avatarUrl || "/pc.jpg"}
+              message={review?.message}
+              username={review?.user?.username}
+              avatarUrl={review?.user?.avatarUrl || "/pc.jpg"}
             />
           ))
         ) : (

@@ -115,7 +115,7 @@ const ManageReviews = ({ reviews, onDelete }) => {
           <tbody className="divide-y divide-gray-200">
             {localReviews.map((review) => (
               <tr key={review._id} className="hover:bg-gray-50">
-                <td className="p-4 text-gray-800">{review.user.username}</td>
+                <td className="p-4 text-gray-800">{review?.user?.username}</td>
                 <td className="p-4 text-gray-800">
                   <p
                     className="truncate max-w-md cursor-pointer text-blue-500 hover:underline"

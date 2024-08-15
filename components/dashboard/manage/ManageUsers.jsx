@@ -115,9 +115,9 @@ const ManageUsers = ({ users, onDelete, onPromote, onUpdate }) => {
         <tbody>
           {users.map((user) => (
             <tr key={user._id} className="border-b">
-              <td className="p-4">{user.username}</td>
-              <td className="p-4">{user.email}</td>
-              <td className="p-4">{user.role}</td>
+              <td className="p-4">{user?.username}</td>
+              <td className="p-4">{user?.email}</td>
+              <td className="p-4">{user?.role}</td>
               <td className="p-4">
                 <select
                   value={user.plan}

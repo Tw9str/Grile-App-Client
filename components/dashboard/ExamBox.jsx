@@ -8,7 +8,7 @@ export default function ExamBox({
   const date = new Date(createdAt);
   return (
     <article className="grid items-center justify-center text-center bg-white p-4 rounded-xl border-2 border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300">
-      <Link href={`/dashboard/exams/${category.title}/${slug}`}>
+      <Link href={`/dashboard/exams/${category?.title}/${slug}`}>
         <div className="text-2xl">📝</div>
         <h2 className="mt-4 text-xl font-bold text-gray-800 uppercase">
           {title}
@@ -26,7 +26,7 @@ export default function ExamBox({
             <Image className="rounded-full" src="/pc.jpg" alt="" fill />
           </div>
           <div className="text-sm leading-6">
-            <p className="font-semibold text-gray-800">{user.username}</p>
+            <p className="font-semibold text-gray-800">{user?.username}</p>
             <time dateTime={createdAt} className="text-gray-500">
               {date.toLocaleDateString()}
             </time>

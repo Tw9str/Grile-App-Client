@@ -51,21 +51,18 @@ export default function ExamViewer({ exam }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Prevent Print Screen (PrintScreen key on Windows)
       if (e.key === "PrintScreen") {
         e.preventDefault();
         document.body.style.filter = "blur(10px)";
         alert("Screenshots are not allowed!");
       }
 
-      // Prevent Ctrl + Shift + S (Snipping Tool)
       if (e.ctrlKey && e.shiftKey && e.key === "S") {
         e.preventDefault();
         document.body.style.filter = "blur(10px)";
         alert("Screenshots are not allowed!");
       }
 
-      // Prevent Windows Key + Shift + S (Snipping Tool on Windows)
       if (e.metaKey && e.shiftKey && e.key === "S") {
         e.preventDefault();
         document.body.style.filter = "blur(10px)";
@@ -147,7 +144,7 @@ export default function ExamViewer({ exam }) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             userId,
