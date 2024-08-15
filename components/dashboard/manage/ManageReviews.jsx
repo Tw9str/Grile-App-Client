@@ -4,6 +4,7 @@ import OverlayAlert from "@/components/widgets/OverlayAlert";
 import Notification from "@/components/widgets/Notification";
 import NoData from "@/components/shared/NoData";
 import Modal from "@/components/widgets/Modal";
+import { useSelector } from "react-redux";
 
 const ManageReviews = ({ reviews, onDelete }) => {
   const [reviewToDelete, setReviewToDelete] = useState(null);
@@ -17,6 +18,7 @@ const ManageReviews = ({ reviews, onDelete }) => {
   });
 
   const [localReviews, setLocalReviews] = useState(reviews);
+  const token = useSelector((state) => state.auth.token);
 
   const confirmDelete = (id) => {
     setShowOverlay(true);
@@ -29,6 +31,9 @@ const ManageReviews = ({ reviews, onDelete }) => {
         `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/review/delete/${reviewToDelete}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       onDelete(reviewToDelete);
@@ -54,6 +59,9 @@ const ManageReviews = ({ reviews, onDelete }) => {
         `${process.env.NEXT_PUBLIC_API_BASE}/api/manage/review/approve/${reviewId}`,
         {
           method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setNotification({
