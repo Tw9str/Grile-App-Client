@@ -33,10 +33,10 @@ export default function Button({ planId }) {
 
   return (
     <button
-      className="rounded-full text-white mx-auto md:mx-0 bg-green-500 py-4 px-6 shadow-md hover:bg-green-400 duration-300"
+      className="mt-4 rounded-full text-white mx-auto md:mx-0 bg-green-500 py-4 px-6 shadow-md hover:bg-green-400 duration-300"
       onClick={handleSubscriptionButton}
     >
-      Buy plan
+      Cumpără planul
     </button>
   );
 }

@@ -59,7 +59,7 @@ export default function Plans({ reset }) {
           <NoData description="No plans available" />
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+        <div className="w-fit mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
           {plans.map((plan) => (
             <Plan key={plan._id} plan={plan} />
           ))}

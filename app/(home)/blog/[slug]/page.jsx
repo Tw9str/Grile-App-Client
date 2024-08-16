@@ -10,7 +10,6 @@ export default function Blog({ params }) {
   const slug = params.slug;
 
   const [postData, setPostData] = useState({ post: null, error: null });
-  console.log(postData);
 
   useEffect(() => {
     async function fetchData() {
@@ -44,7 +43,7 @@ export default function Blog({ params }) {
             {new Date(post.createdAt).toLocaleDateString()}
           </time>
           <Link
-            href="/"
+            href={`/blog/${slug}`}
             className="rounded-full bg-green-100 px-3 py-1.5 font-medium text-gray-600 hover:bg-green-200"
           >
             {post.title}
@@ -79,9 +78,11 @@ export default function Blog({ params }) {
         />
         <div className="text-sm leading-6">
           <p className="font-semibold text-gray-900">
-            <Link href="/">{post?.author?.username}</Link>
+            <Link href={`/blog/${slug}`}>
+              {post?.author?.username || "Unknown"}
+            </Link>
           </p>
-          <p className="text-gray-600">{post.author.role}</p>
+          <p className="text-gray-600">{post?.author?.role}</p>
         </div>
       </div>
     </section>

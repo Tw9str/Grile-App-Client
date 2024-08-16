@@ -42,7 +42,7 @@ const ManageExams = ({ exams, onDelete, onUpdate }) => {
     await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam/edit/${examId}`,
       {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const ManageExams = ({ exams, onDelete, onUpdate }) => {
     await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam/edit/${examId}`,
       {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

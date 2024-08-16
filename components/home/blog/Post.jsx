@@ -51,7 +51,7 @@ export default function Post({ post }) {
           <p className="font-semibold text-gray-900">
             <Link href={`/blog/${post.slug}`}>
               <span className="absolute inset-0" />
-              {post?.author?.username}
+              {post?.author?.username || "Unknown"}
             </Link>
           </p>
           <p className="text-gray-600">{post?.author?.role}</p>

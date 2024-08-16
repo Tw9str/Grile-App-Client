@@ -145,7 +145,7 @@ export default function EditExam({ exam, categories }) {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE}/api/create/exam/edit/${exam._id}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
           },

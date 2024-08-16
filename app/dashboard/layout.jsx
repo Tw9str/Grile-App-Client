@@ -8,17 +8,11 @@ import { useEffect } from "react";
 
 export default function Layout({ children }) {
   const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const updateUserDetails = async () => {
       try {
-        if (!token || !user) {
-          console.log("Token or user is missing.");
-          return;
-        }
-
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE}/api/users/me`,
           {
@@ -27,23 +21,19 @@ export default function Layout({ children }) {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user }),
           }
         );
 
         if (!res.ok) throw new Error("Failed to update user details");
 
-        const data = await res.json();
-
-        dispatch(setToken({ token, user: data.user }));
+        const user = await res.json();
+        dispatch(setToken({ token, user }));
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     };
 
-    if (token && user) {
-      updateUserDetails();
-    }
+    updateUserDetails();
   }, []);
 
   if (!token) {

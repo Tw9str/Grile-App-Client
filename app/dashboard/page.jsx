@@ -9,7 +9,10 @@ import PortalButton from "@/components/shared/buttons/PortalButton";
 
 export default function Dashboard() {
   const [exams, setExams] = useState([]);
+  const [premiumUsers, setPremiumUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingExams, setLoadingExams] = useState(true);
+  const [loadingPremiumUsers, setLoadingPremiumUsers] = useState(true);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
 
@@ -33,27 +36,67 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Error fetching exams:", error);
       } finally {
-        setLoading(false);
+        setLoadingExams(false);
+      }
+    };
+
+    const fetchPremiumUsers = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/users/premium`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch premium users");
+        }
+        const data = await response.json();
+        setPremiumUsers(data);
+      } catch (error) {
+        console.error("Error fetching premium users:", error);
+      } finally {
+        setLoadingPremiumUsers(false);
       }
     };
 
     fetchExams();
+    fetchPremiumUsers();
   }, []);
+
+  useEffect(() => {
+    if (!loadingExams && !loadingPremiumUsers) {
+      setLoading(false);
+    }
+  }, [loadingExams, loadingPremiumUsers]);
 
   if (loading) {
     return <LoadingSpinner />;
   }
-
   return (
     <div className="flex-1 p-4 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-lg shadow-sm">
         <div>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-lg md:text-3xl font-bold text-gray-900">
             Bine ai revenit, {user?.username}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm text-gray-600 mt-2">
             Explorează examenele recente și gestionează-ți contul cu ușurință!
           </p>
+        </div>
+        <div className="flex flex-col items-center p-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg shadow-lg hover:shadow-xl transition duration-200">
+          <div className="relative flex items-center justify-center mb-2">
+            <span className="text-2xl text-white">💎</span>
+          </div>
+          <div className="text-center text-white">
+            <h3 className="text-xs md:text-sm font-semibold uppercase tracking-wider">
+              Utilizatori Premium
+            </h3>
+            <p className="font-bold">{premiumUsers?.count || 0}</p>
+          </div>
         </div>
       </div>
 

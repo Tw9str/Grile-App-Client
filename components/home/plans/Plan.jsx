@@ -16,7 +16,7 @@ export default function Plan({
 }) {
   return (
     <article
-      className={`space-y-4 shadow-lg px-6 py-8 border-2 ${
+      className={`flex flex-col justify-between items-start shadow-lg px-6 py-8 border-2 ${
         popular ? "border-green-500" : "border-neutral-100"
       } rounded-xl cursor-pointer hover:scale-105 duration-300`}
     >
@@ -34,7 +34,7 @@ export default function Plan({
           </p>
         )}
       </div>
-      <p className="text-sm text-neutral-600 h-10">{description}</p>
+      <p className="mt-2 text-sm text-neutral-600 h-10">{description}</p>
       <p>
         <span className="font-bold text-xl uppercase">
           {currency} {price}
