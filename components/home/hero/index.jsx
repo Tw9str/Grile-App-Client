@@ -30,7 +30,7 @@ export default function Hero() {
           la facultate.
         </p>
         <Link
-          href="/auth/register"
+          href="/register"
           className="rounded-full text-white mx-auto md:mx-0 bg-green-500 py-4 px-6 shadow-md hover:bg-green-400 duration-300"
         >
           începe gratuit

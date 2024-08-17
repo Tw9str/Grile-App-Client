@@ -78,7 +78,7 @@ export default function Dashboard() {
   }
   return (
     <div className="flex-1 p-4 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-lg shadow-sm">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8 bg-white p-4 rounded-lg shadow-sm">
         <div>
           <h1 className="text-lg md:text-3xl font-bold text-gray-900">
             Bine ai revenit, {user?.username}

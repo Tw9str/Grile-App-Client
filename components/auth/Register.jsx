@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MdiEye, MdiEyeOff } from "@/components/dashboard/Icons"; // Adjust the path based on your project structure
+import { MdiEye, MdiEyeOff } from "@/components/dashboard/Icons";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -88,7 +88,7 @@ export default function Register() {
 
       const data = await response.json();
       if (data.success) {
-        router.push("/auth/login");
+        router.push("/login");
       } else {
         const formattedMessages = data.message.reduce((acc, error) => {
           const field = error.toLowerCase().includes("username")
@@ -295,7 +295,7 @@ export default function Register() {
           </div>
           <p className="text-gray-600 px-6 text-sm text-center">
             Ai deja un cont?{" "}
-            <Link href="/auth/login" className="text-gray-950 hover:underline">
+            <Link href="/login" className="text-gray-950 hover:underline">
               Autentificare
             </Link>
             .

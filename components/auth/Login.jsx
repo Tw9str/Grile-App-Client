@@ -80,7 +80,7 @@ export default function Login() {
               type="text"
               name="username"
               id="username"
-              placeholder="exemplu@domeniu.com"
+              placeholder="example@domain.com"
               className="w-full px-3 py-2 border rounded-md focus:outline-green-500"
               onChange={handleInputChange}
               aria-required="true"
@@ -93,7 +93,7 @@ export default function Login() {
               </label>
               <Link
                 rel="noopener noreferrer"
-                href="/auth/reset-password"
+                href="/request-reset-password"
                 className="text-gray-950 text-xs hover:underline"
               >
                 Ai uitat parola?
@@ -138,10 +138,7 @@ export default function Login() {
           </div>
           <p className="text-gray-600 px-6 text-sm text-center">
             Nu ai încă un cont?{" "}
-            <Link
-              href="/auth/register"
-              className="text-gray-950 hover:underline"
-            >
+            <Link href="/register" className="text-gray-950 hover:underline">
               Creează unul
             </Link>
             !

@@ -4,44 +4,58 @@ import React, { useState } from "react";
 import ContactSvg from "./ContactSvg";
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+  const [state, setState] = useState({
+    formData: {
+      name: "",
+      email: "",
+      message: "",
+    },
     message: "",
+    loading: false,
   });
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setState((prevState) => ({
+      ...prevState,
+      formData: { ...prevState.formData, [name]: value },
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
+    setState((prevState) => ({ ...prevState, loading: true, message: "" }));
+
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/contact`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state.formData),
+        }
+      );
 
       const data = await response.json();
-      if (data.success) {
-        setMessage("Thank you for your message! We'll get back to you soon.");
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        setMessage("An error occurred. Please try again later.");
-      }
+      setState((prevState) => ({
+        ...prevState,
+        message: data.success ? data.message : data.error,
+        formData: data.success
+          ? { name: "", email: "", message: "" }
+          : prevState.formData,
+        loading: false,
+      }));
     } catch (error) {
       console.error("Error submitting form", error);
-      setMessage("An error occurred. Please try again later.");
-    } finally {
-      setLoading(false);
+      setState((prevState) => ({
+        ...prevState,
+        message: "A apărut o eroare. Vă rugăm să încercați din nou mai târziu.",
+        loading: false,
+      }));
     }
   };
+
+  const { formData, message, loading } = state;
 
   return (
     <section
@@ -61,7 +75,7 @@ const ContactForm = () => {
             <div className="text-center lg:text-left text-sm mb-4">
               <p
                 className={`text-${
-                  message.includes("Thank you") ? "green" : "red"
+                  message.includes("succes") ? "green" : "red"
                 }-500`}
               >
                 {message}

@@ -37,7 +37,7 @@ export default function Layout({ children }) {
   }, []);
 
   if (!token) {
-    redirect("/auth/login");
+    redirect("/login");
   }
 
   return (

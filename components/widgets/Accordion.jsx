@@ -10,7 +10,7 @@ export default function Accordion({ title, children }) {
         className="flex justify-between items-center pt-2 md:pt-8 pb-4 p-2 md:px-4 cursor-pointer"
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <h6 className="font-semibold text-xl">{title}</h6>
+        <h2 className="font-semibold text-xl">{title}</h2>
         <svg
           className={`w-8 h-8 transition-transform transform ${
             isOpen ? "rotate-180" : ""
