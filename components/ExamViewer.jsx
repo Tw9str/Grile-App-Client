@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import EndScreen from "./EndScreen";
 import OverlayAlert from "@/components/widgets/OverlayAlert";
@@ -24,46 +24,45 @@ export default function ExamViewer({ exam }) {
   const [timeRemaining, setTimeRemaining] = useState(exam.duration * 60);
   const [showOverlay, setShowOverlay] = useState(false);
   const { user, token } = useSelector((state) => state.auth);
+
   const userId = user._id;
 
+  // Fetch the current session data on component mount
   useEffect(() => {
     const fetchSession = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/sessions/session?userId=${userId}&examId=${exam._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/sessions/session?userId=${userId}&examId=${exam._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const session = await response.json();
+        if (session) {
+          setTimeRemaining(session.remainingTime);
+          setIsPaused(session.isPaused);
+          setCurrentQuestionIndex(session.currentQuestionIndex);
+          setAnswers(session.selectedAnswers);
+          setTotalPoints(session.totalPoints);
+          setQuestionPoints(session.questionPoints);
         }
-      );
-      const session = await response.json();
-      if (session) {
-        setTimeRemaining(session.remainingTime);
-        setIsPaused(session.isPaused);
-        setCurrentQuestionIndex(session.currentQuestionIndex);
-        setAnswers(session.selectedAnswers);
-        setTotalPoints(session.totalPoints);
-        setQuestionPoints(session.questionPoints);
+      } catch (error) {
+        console.error("Error fetching session data:", error);
       }
     };
     fetchSession();
   }, [userId, exam._id, token]);
 
+  // Add event listener to prevent screenshots
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "PrintScreen") {
-        e.preventDefault();
-        document.body.style.filter = "blur(10px)";
-        alert("Screenshots are not allowed!");
-      }
-
-      if (e.ctrlKey && e.shiftKey && e.key === "S") {
-        e.preventDefault();
-        document.body.style.filter = "blur(10px)";
-        alert("Screenshots are not allowed!");
-      }
-
-      if (e.metaKey && e.shiftKey && e.key === "S") {
+      if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && e.shiftKey && e.key === "S") ||
+        (e.metaKey && e.shiftKey && e.key === "S")
+      ) {
         e.preventDefault();
         document.body.style.filter = "blur(10px)";
         alert("Screenshots are not allowed!");
@@ -77,50 +76,53 @@ export default function ExamViewer({ exam }) {
     };
   }, []);
 
-  const handleAnswerSelect = (value) => {
+  // Handle answer selection
+  const handleAnswerSelect = useCallback((value) => {
     setSelectedAnswers((prevSelected) =>
       prevSelected.includes(value)
         ? prevSelected.filter((answer) => answer !== value)
         : [...prevSelected, value]
     );
-  };
+  }, []);
 
-  const handlePauseButton = () => {
-    if (!isPaused) {
-      setShowOverlay(true);
-    } else {
-      handleConfirmPause();
-    }
-  };
+  // Handle pausing and resuming the exam
+  const handlePauseToggle = useCallback(() => {
+    setShowOverlay(!isPaused);
+  }, [isPaused]);
 
   const handleConfirmPause = async () => {
     const newPauseState = !isPaused;
     setIsPaused(newPauseState);
     setShowOverlay(false);
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/sessions/store-session`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          userId,
-          examId: exam._id,
-          remainingTime: timeRemaining,
-          isPaused: newPauseState,
-          currentQuestionIndex,
-          selectedAnswers: answers,
-          totalPoints,
-          questionPoints,
-        }),
-      }
-    );
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/sessions/store-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            userId,
+            examId: exam._id,
+            remainingTime: timeRemaining,
+            isPaused: newPauseState,
+            currentQuestionIndex,
+            selectedAnswers: answers,
+            totalPoints,
+            questionPoints,
+          }),
+        }
+      );
+    } catch (error) {
+      console.error("Error saving session state:", error);
+    }
   };
 
-  const handleNextQuestion = () => {
+  // Handle advancing to the next question
+  const handleNextQuestion = useCallback(() => {
     const currentQuestion = exam.questions[currentQuestionIndex];
     const points = calculatePoints(selectedAnswers, currentQuestion);
     setTotalPoints((prevPoints) => prevPoints + points);
@@ -128,12 +130,14 @@ export default function ExamViewer({ exam }) {
     setQuestionPoints((prevPoints) => [...prevPoints, points]);
     setSelectedAnswers([]);
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-  };
+  }, [selectedAnswers, currentQuestionIndex, exam.questions]);
 
+  // Handle exam submission
   const handleSubmit = async () => {
     const currentQuestion = exam.questions[currentQuestionIndex];
     const points = calculatePoints(selectedAnswers, currentQuestion);
     const finalPoints = totalPoints + points;
+
     setAnswers((prev) => [...prev, selectedAnswers]);
     setQuestionPoints((prevPoints) => [...prevPoints, points]);
 
@@ -169,7 +173,10 @@ export default function ExamViewer({ exam }) {
     setCurrentQuestionIndex(0);
   };
 
-  const currentQuestion = exam.questions[currentQuestionIndex];
+  const currentQuestion = useMemo(
+    () => exam.questions[currentQuestionIndex],
+    [currentQuestionIndex, exam.questions]
+  );
   const isSubmitDisabled = selectedAnswers.length === 0;
   const isLastQuestion = currentQuestionIndex === exam.questions.length - 1;
 
@@ -225,25 +232,16 @@ export default function ExamViewer({ exam }) {
                     } rounded-lg p-4 border border-gray-100 cursor-pointer duration-300`}
                     onClick={() => handleAnswerSelect(index.toString())}
                   >
-                    <label className="cursor-pointer" htmlFor={index}>
-                      {String.fromCharCode(65 + index)}. {answer}
-                    </label>
-                    <input
-                      className="hidden"
-                      type="checkbox"
-                      name={currentQuestionIndex.toString()}
-                      id={index.toString()}
-                      value={index.toString()}
-                    />
+                    {String.fromCharCode(65 + index)}. {answer}
                   </li>
                 ))}
               </ul>
               <div className="flex justify-center items-center gap-2">
                 <button
                   className={`flex justify-center items-center gap-2 rounded-lg uppercase text-white ${
-                    !isPaused ? "bg-orange-500" : "bg-blue-500"
-                  }  py-4 px-6 shadow-md hover:bg-orange-300 duration-300`}
-                  onClick={handlePauseButton}
+                    isPaused ? "bg-blue-500" : "bg-orange-500"
+                  } py-4 px-6 shadow-md hover:bg-orange-300 duration-300`}
+                  onClick={handlePauseToggle}
                 >
                   {isPaused ? (
                     <MaterialSymbolsPlayArrowOutline />
