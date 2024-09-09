@@ -18,6 +18,7 @@ export default function EditExam({ exam, categories }) {
       points: "",
     },
   ]);
+  const [deletedQuestionIds, setDeletedQuestionIds] = useState([]);
   const [errors, setErrors] = useState({});
   const token = useSelector((state) => state.auth.token);
   const userId = useSelector((state) => state.auth.user?._id);
@@ -33,6 +34,7 @@ export default function EditExam({ exam, categories }) {
     }));
     setQuestions(parsedQuestions);
   }, [exam]);
+
   const addQuestion = () => {
     setQuestions([
       ...questions,
@@ -49,8 +51,10 @@ export default function EditExam({ exam, categories }) {
 
   const deleteQuestion = (index) => {
     const updatedQuestions = [...questions];
+    const deletedQuestionId = updatedQuestions[index]._id;
     updatedQuestions.splice(index, 1);
     setQuestions(updatedQuestions);
+    setDeletedQuestionIds([...deletedQuestionIds, deletedQuestionId]);
   };
 
   const handleQuestionChange = (index, field, value) => {
@@ -122,6 +126,8 @@ export default function EditExam({ exam, categories }) {
     formData.append("category", examTitle.category);
     formData.append("user", userId);
 
+    formData.append("deletedQuestionIds", JSON.stringify(deletedQuestionIds));
+
     questions.forEach((question, index) => {
       if (question.image instanceof File) {
         formData.append(`questionImage${index}`, question.image);
@@ -132,11 +138,12 @@ export default function EditExam({ exam, categories }) {
       "questionsData",
       JSON.stringify(
         questions.map((q) => ({
+          id: q._id,
           answers: q.answers,
           correctAnswers: q.correctAnswers,
           explanation: q.explanation,
           points: q.points,
-          image: typeof q.image === "string" ? q.image : "",
+          image: typeof q.image === "string" ? q.image : null,
         }))
       )
     );

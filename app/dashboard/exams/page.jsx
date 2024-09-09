@@ -43,9 +43,9 @@ export default function ExamCategoriesPage() {
     return <NoData description={error} />;
   }
 
-  const visibleCategories = categories.filter(
-    (category) => category.isVisible === true
-  );
+  const visibleCategories =
+    Array.isArray(categories) &&
+    categories.filter((category) => category.isVisible === true);
 
   if (!visibleCategories.length) {
     return <NoData description="No exams available." />;
