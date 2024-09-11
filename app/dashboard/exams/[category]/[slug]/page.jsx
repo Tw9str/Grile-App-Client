@@ -1,6 +1,6 @@
 "use client";
-import EditExam from "@/components/EditExam";
-import ExamViewer from "@/components/ExamViewer";
+import EditExam from "@/components/dashboard/EditExam";
+import ExamViewer from "@/components/dashboard/ExamViewer";
 import { fetchCategories } from "@/utils/fetchCategories";
 import { fetchExam } from "@/utils/fetchExam";
 import React from "react";

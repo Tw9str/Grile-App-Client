@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function OverlayAlert({
   title,
   description,
@@ -8,6 +6,8 @@ export default function OverlayAlert({
   confirmButtonColor,
   iconColor,
 }) {
+  const isBlue = confirmButtonColor && confirmButtonColor.includes("blue");
+
   return (
     <div
       className="relative z-10"
@@ -23,11 +23,17 @@ export default function OverlayAlert({
               <div className="sm:flex sm:items-start">
                 <div
                   className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${
-                    iconColor ? "bg-orange-100" : "bg-red-100"
+                    isBlue
+                      ? "bg-blue-100"
+                      : iconColor
+                      ? "bg-orange-100"
+                      : "bg-red-100"
                   } sm:mx-0 sm:h-10 sm:w-10`}
                 >
                   <svg
-                    className={`h-6 w-6 ${iconColor || "text-red-500"}`}
+                    className={`h-6 w-6 ${
+                      iconColor || (isBlue ? "text-blue-400" : "text-red-500")
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
@@ -58,7 +64,9 @@ export default function OverlayAlert({
               <button
                 type="button"
                 className={`inline-flex w-full justify-center rounded-md ${
-                  confirmButtonColor
+                  isBlue
+                    ? "bg-blue-400 hover:bg-blue-300"
+                    : confirmButtonColor
                     ? confirmButtonColor + " hover:bg-orange-300"
                     : "bg-red-500 hover:bg-red-400"
                 } px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto`}

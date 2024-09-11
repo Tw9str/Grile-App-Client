@@ -8,6 +8,7 @@ import { calculatePoints } from "@/utils/calculatePoints";
 import { useSelector } from "react-redux";
 import {
   CarbonNextOutline,
+  CarbonPreviousOutline,
   FormkitSubmit,
   MaterialSymbolsPauseOutline,
   MaterialSymbolsPlayArrowOutline,
@@ -20,14 +21,15 @@ export default function ExamViewer({ exam }) {
   const [answers, setAnswers] = useState([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [showTotalPoints, setShowTotalPoints] = useState(false);
-  const [questionPoints, setQuestionPoints] = useState([]);
+  const [questionPoints, setQuestionPoints] = useState(
+    Array(exam.questions.length).fill(0)
+  );
   const [timeRemaining, setTimeRemaining] = useState(exam.duration * 60);
   const [showOverlay, setShowOverlay] = useState(false);
   const { user, token } = useSelector((state) => state.auth);
 
   const userId = user._id;
 
-  // Fetch the current session data on component mount
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -55,7 +57,7 @@ export default function ExamViewer({ exam }) {
     fetchSession();
   }, [userId, exam._id, token]);
 
-  // Add event listener to prevent screenshots
+  // Prevent screenshots
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (
@@ -76,19 +78,28 @@ export default function ExamViewer({ exam }) {
     };
   }, []);
 
-  // Handle answer selection
-  const handleAnswerSelect = useCallback((value) => {
-    setSelectedAnswers((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((answer) => answer !== value)
-        : [...prevSelected, value]
-    );
-  }, []);
+  const handleAnswerSelect = useCallback(
+    (value) => {
+      setSelectedAnswers((prevSelected) => {
+        const updatedSelected = prevSelected.includes(value)
+          ? prevSelected.filter((answer) => answer !== value)
+          : [...prevSelected, value];
 
-  // Handle pausing and resuming the exam
+        setAnswers((prev) => {
+          const newAnswers = [...prev];
+          newAnswers[currentQuestionIndex] = updatedSelected;
+          return newAnswers;
+        });
+
+        return updatedSelected;
+      });
+    },
+    [currentQuestionIndex]
+  );
+
   const handlePauseToggle = useCallback(() => {
-    setShowOverlay(!isPaused);
-  }, [isPaused]);
+    setShowOverlay(true);
+  }, []);
 
   const handleConfirmPause = async () => {
     const newPauseState = !isPaused;
@@ -121,25 +132,78 @@ export default function ExamViewer({ exam }) {
     }
   };
 
-  // Handle advancing to the next question
-  const handleNextQuestion = useCallback(() => {
+  const saveCurrentAnswers = useCallback(() => {
     const currentQuestion = exam.questions[currentQuestionIndex];
     const points = calculatePoints(selectedAnswers, currentQuestion);
-    setTotalPoints((prevPoints) => prevPoints + points);
-    setAnswers((prev) => [...prev, selectedAnswers]);
-    setQuestionPoints((prevPoints) => [...prevPoints, points]);
-    setSelectedAnswers([]);
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+
+    setAnswers((prev) => {
+      const newAnswers = [...prev];
+      newAnswers[currentQuestionIndex] = selectedAnswers;
+      return newAnswers;
+    });
+
+    setQuestionPoints((prevPoints) => {
+      const newPoints = [...prevPoints];
+      newPoints[currentQuestionIndex] = points;
+      return newPoints;
+    });
   }, [selectedAnswers, currentQuestionIndex, exam.questions]);
 
-  // Handle exam submission
-  const handleSubmit = async () => {
-    const currentQuestion = exam.questions[currentQuestionIndex];
-    const points = calculatePoints(selectedAnswers, currentQuestion);
-    const finalPoints = totalPoints + points;
+  const handleNextQuestion = useCallback(() => {
+    saveCurrentAnswers();
 
-    setAnswers((prev) => [...prev, selectedAnswers]);
-    setQuestionPoints((prevPoints) => [...prevPoints, points]);
+    setCurrentQuestionIndex((prevIndex) => {
+      const nextIndex = prevIndex + 1;
+
+      setSelectedAnswers(answers[nextIndex] || []);
+
+      return nextIndex;
+    });
+  }, [saveCurrentAnswers, answers]);
+
+  const handlePreviousQuestion = useCallback(() => {
+    if (currentQuestionIndex > 0) {
+      saveCurrentAnswers();
+
+      setCurrentQuestionIndex((prevIndex) => {
+        const newIndex = prevIndex - 1;
+
+        setSelectedAnswers(answers[newIndex] || []);
+
+        return newIndex;
+      });
+    }
+  }, [saveCurrentAnswers, currentQuestionIndex, answers]);
+
+  const handleJumpToQuestion = useCallback(
+    (index) => {
+      saveCurrentAnswers();
+
+      setCurrentQuestionIndex(index);
+      setSelectedAnswers(answers[index] || []);
+    },
+    [saveCurrentAnswers, answers]
+  );
+
+  const handleSubmit = async () => {
+    // Save the current answers (this ensures the last question's answers and points are included)
+    saveCurrentAnswers();
+
+    // After saving the current answers, calculate total points
+    const updatedQuestionPoints = [...questionPoints]; // Updated points after saveCurrentAnswers is called
+    updatedQuestionPoints[currentQuestionIndex] = calculatePoints(
+      selectedAnswers,
+      exam.questions[currentQuestionIndex]
+    ); // Ensure last question points are updated
+
+    // Calculate the final total points from the updated question points
+    const finalPoints = updatedQuestionPoints.reduce(
+      (acc, points) => acc + points,
+      0
+    );
+
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentQuestionIndex] = selectedAnswers; // Save selected answers for the current question
 
     try {
       const response = await fetch(
@@ -153,9 +217,12 @@ export default function ExamViewer({ exam }) {
           body: JSON.stringify({
             userId,
             examId: exam._id,
-            answers: [...answers, selectedAnswers],
+            answers: updatedAnswers,
             points: finalPoints,
-            questionPoints: [...questionPoints, points],
+            questionPoints: updatedQuestionPoints.slice(
+              0,
+              exam.questions.length
+            ),
           }),
         }
       );
@@ -166,6 +233,7 @@ export default function ExamViewer({ exam }) {
       console.error("Error submitting answers:", error);
     }
 
+    // Reset state after submission
     setTotalPoints(finalPoints);
     setShowTotalPoints(true);
     setSelectedAnswers([]);
@@ -177,8 +245,13 @@ export default function ExamViewer({ exam }) {
     () => exam.questions[currentQuestionIndex],
     [currentQuestionIndex, exam.questions]
   );
-  const isSubmitDisabled = selectedAnswers.length === 0;
+
+  const isSubmitDisabled =
+    selectedAnswers.length === 0 ||
+    !exam.questions.every((_, index) => answers[index]?.length > 0);
+
   const isLastQuestion = currentQuestionIndex === exam.questions.length - 1;
+  const isFirstQuestion = currentQuestionIndex === 0;
 
   return (
     <div
@@ -250,6 +323,14 @@ export default function ExamViewer({ exam }) {
                   )}
                   {isPaused ? "Continue" : "Pause"}
                 </button>
+                <button
+                  className="flex justify-center items-center gap-2 rounded-lg uppercase text-white bg-green-500 py-4 px-6 shadow-md hover:bg-orange-500 duration-300 disabled:bg-green-300"
+                  disabled={isFirstQuestion}
+                  onClick={handlePreviousQuestion}
+                >
+                  <CarbonPreviousOutline />
+                  Back
+                </button>
                 {isLastQuestion ? (
                   <button
                     className="flex justify-center items-center gap-2 rounded-lg uppercase text-white bg-green-500 py-4 px-6 shadow-md hover:bg-orange-500 duration-300 disabled:bg-green-300"
@@ -262,7 +343,6 @@ export default function ExamViewer({ exam }) {
                 ) : (
                   <button
                     className="flex justify-center items-center gap-2 rounded-lg uppercase text-white bg-green-500 py-4 px-6 shadow-md hover:bg-orange-500 duration-300 disabled:bg-green-300"
-                    disabled={isSubmitDisabled}
                     onClick={handleNextQuestion}
                   >
                     <CarbonNextOutline />
@@ -270,16 +350,39 @@ export default function ExamViewer({ exam }) {
                   </button>
                 )}
               </div>
+              {/* Question navigation buttons */}
+              <div className="flex justify-center gap-3 mt-6">
+                {exam.questions.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 ease-in-out 
+                   ${
+                     currentQuestionIndex === index
+                       ? "bg-blue-600 text-white shadow-lg transform scale-105"
+                       : answers[index]?.length > 0
+                       ? "bg-green-500 text-white shadow-md" // Mark answered questions green
+                       : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-black shadow-md"
+                   }`}
+                    onClick={() => handleJumpToQuestion(index)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           {showOverlay && (
             <OverlayAlert
-              title="Pause Exam"
-              description="Are you sure you want to pause the exam?"
+              title={`${isPaused ? "Continue" : "Pause"} exam`}
+              description={`Are you sure you want to ${
+                isPaused ? "continue" : "pause"
+              } the exam?`}
               onConfirm={handleConfirmPause}
               onCancel={() => setShowOverlay(false)}
-              confirmButtonColor="bg-orange-400"
-              iconColor="text-orange-400"
+              confirmButtonColor={`${
+                isPaused ? "bg-blue-400" : "bg-orange-400"
+              }`}
+              iconColor={`${isPaused ? "text-blue-400" : "text-orange-400"}`}
             />
           )}
         </div>
